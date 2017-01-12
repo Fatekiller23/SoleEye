@@ -61,10 +61,9 @@ class Radar(object):
         """
 
         cmd = 'tesseract {} out -l {}'.format(image_path, self.language)
-        print(cmd)
         arguments = cmd.split()
         subprocess.run(arguments)
-        # os.remove(image_path)
+        os.remove(image_path)
         data = read_delete('out.txt')
         return data
 
