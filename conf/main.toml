@@ -1,0 +1,15 @@
+[getcha]
+
+allowed_extension = ['png', 'bmp']
+
+uploaded_filepath = 'store'
+
+listen='*:8000'
+
+[sewing_machine]
+
+image_store = 'store/'
+
+language = 'flowsystem2'
+
+plugin_name = 'flow_system'

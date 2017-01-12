@@ -1,0 +1,9 @@
+
+#the coords of these region you want crop.
+region_file='processor/flow_system_region_list.conf'
+
+#the (width, height) pair of maxmizing threshold.
+fangda = [480, 130]
+
+#the processed image we want to save.
+save_address = 'output/good.png'
