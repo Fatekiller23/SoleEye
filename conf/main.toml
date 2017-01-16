@@ -13,3 +13,5 @@ image_store = 'store/'
 language = 'flowsystem2'
 
 plugin_name = 'flow_system'
+
+box_count = 10

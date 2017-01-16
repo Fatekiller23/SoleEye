@@ -3,7 +3,8 @@ import random
 import subprocess
 import time
 
-from utils import read_delete, get_conf
+from utils import read_delete, get_conf, CustomImage, CustomText
+from PIL import Image
 
 conf_dict = get_conf('conf/main.toml')['sewing_machine']
 
@@ -15,8 +16,10 @@ class Radar(object):
 
     Public attributes:
     -image_direectory is derectory of your receiving images.
-    -whcih languange you use to OCR.
+    -language languange you use to OCR.
         xxx.trained.data
+    -counter how many direcotory you want to store for debuging.
+    -debug_object for internal use.
 
     """
 
@@ -26,6 +29,8 @@ class Radar(object):
         """
         self.image_directory = conf['image_store']
         self.language = conf['language']
+        self.counter = conf['box_count']
+        self.debug_object = []
 
     def get_a_picture_randomly(self):
         """
@@ -63,19 +68,54 @@ class Radar(object):
         cmd = 'tesseract {} out -l {}'.format(image_path, self.language)
         arguments = cmd.split()
         subprocess.run(arguments)
-        os.remove(image_path)
+        # os.remove(image_path)
+        a.collector('out.txt', 'no use')
         data = read_delete('out.txt')
         return data
+
+    def collector(self, file_name, which):
+        ext = file_name[-3:]
+        if ext in ('png', 'bmp'):
+            # png read method
+            one_picture = Image.open(file_name)
+            size = one_picture.size
+            if which == 'good':
+                # g = one_picture.getdata(1)
+                # b = one_picture.getdata(2)
+                # data = [one for one in zip(g, b)]
+                # data = one_picture.getdata(0)
+                data = one_picture.getdata()
+            else:
+                data = one_picture.getdata()
+            self.debug_object.append(CustomImage(size, data, which))
+
+        if ext in 'txt':
+            # txt read method
+            with open(file_name, 'r') as f:
+                data = f.read()
+            self.debug_object.append(CustomText(data))
+
+
+def save(debug_object, index):
+    num = index % 10
+    for one in debug_object:
+        one.custome_save(num)
 
 
 if __name__ == '__main__':
     a = Radar(conf_dict)
+    number = 0
     while True:
         image_to_be_processed = a.get_a_picture_randomly()
+
         if image_to_be_processed is not None:
+            a.collector(image_to_be_processed, 'raw')
             good_image = a.use_plugin(image_to_be_processed, plugin_name=conf_dict['plugin_name'])
+            a.collector(good_image, 'good')
             res = a.get_result(good_image)
+            save(a.debug_object, number)
             print(res)
+            number += 1
             time.sleep(5)
         else:
             print('there is no picuture in directory.')

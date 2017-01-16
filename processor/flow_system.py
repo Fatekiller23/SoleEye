@@ -62,9 +62,10 @@ class SewingMachine(object):
         background = Image.new('RGB', (horizontal_pixel, vertical_pixel))
         for img in resized_img_list:
             background = self.paste_one_picture(background, img)
-        os.remove(self.target_img)
+        # os.remove(self.target_img)
         background = ImageOps.invert(background)
 
         background.convert('L').save(self.save_address)
+        # background.show()
         print('the picture is saved')
         return self.save_address
