@@ -1,5 +1,5 @@
 import uuid
-
+from sys import version_info
 from flask import Flask, request
 from utils import get_conf
 from waitress import serve
@@ -34,4 +34,10 @@ def upload_file():
     return 'no'
 
 
-serve(app, listen=conf_dict['listen'])
+if version_info[0] == 2:
+    host, port = conf_dict['listen'].split(':')
+    serve(app, host=host, port=port)
+
+
+else:
+    serve(app, listen=conf_dict['listen'])

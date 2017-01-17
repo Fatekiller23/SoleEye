@@ -2,6 +2,9 @@ import toml
 import os
 import uuid
 from PIL import Image
+from sys import version_info
+
+
 # helper function
 def get_conf(conf_file):
     """  configuration file in toml format """
@@ -35,14 +38,19 @@ class CustomImage(object):
     def custome_save(self, num):
         # TODO: will be closed soon.
         path_str = 'debug/{}'.format(num)
-        os.makedirs(path_str, exist_ok=True)
+        if version_info[0] == 2:
+            try:
+                os.makedirs(path_str, )
+            except:
+                pass
+        else:
+            os.makedirs(path_str, exist_ok=True)
         new_ = Image.new('RGB', self.size)
         new_.putdata(self.data, scale=1.0, offset=0.0)
         if self.name == 'good':
-            new_.convert('L').save(path_str+'/{}.png'.format(self.name))
+            new_.convert('L').save(path_str + '/{}.png'.format(self.name))
         else:
             new_.save(path_str + '/{}.png'.format(self.name))
-
 
 
 class CustomText(object):
@@ -51,7 +59,12 @@ class CustomText(object):
 
     def custome_save(self, num):
         path_str = 'debug/{}'.format(num)
-        os.makedirs(path_str, exist_ok=True)
-        with open(path_str+'/out.txt', 'w') as f:
+        if version_info[0] == 2:
+            try:
+                os.makedirs(path_str, )
+            except:
+                pass
+        else:
+            os.makedirs(path_str, exist_ok=True)
+        with open(path_str + '/out.txt', 'w') as f:
             f.write(self.str)
-

@@ -2,7 +2,7 @@ import os
 import random
 import subprocess
 import time
-
+from sys import version_info
 from utils import read_delete, get_conf, CustomImage, CustomText
 from PIL import Image
 
@@ -67,7 +67,10 @@ class Radar(object):
 
         cmd = 'tesseract {} out -l {}'.format(image_path, self.language)
         arguments = cmd.split()
-        subprocess.run(arguments)
+        if version_info[0] == 2:
+            subprocess.call(arguments)
+        else:
+            subprocess.run(arguments)
         # os.remove(image_path)
         a.collector('out.txt', 'no use')
         data = read_delete('out.txt')

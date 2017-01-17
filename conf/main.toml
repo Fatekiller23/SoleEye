@@ -4,7 +4,7 @@ allowed_extension = ['png', 'bmp']
 
 uploaded_filepath = 'store'
 
-listen='*:8000'
+listen='127.0.0.1:8000'
 
 [sewing_machine]
 
